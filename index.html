@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Spongefield.</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      background: black;
+      color: white;
+      font-family: sans-serif;
+      overflow: hidden;
+    }
+
+    canvas {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      z-index: -1;
+    }
+
+    .container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 50px 20px;
+    }
+
+    .box {
+      width: 80%;
+      max-width: 800px;
+      height: 60vh;
+      min-height: 300px;
+      max-height: 600px;
+      background: black;
+      border: 2px solid white;
+      margin: 20px 0;
+      overflow-y: auto;
+      padding: 0 0 20px 0;
+      scroll-behavior: smooth;
+    }
+
+    .masthead {
+      background: white;
+      color: black;
+      font-size: 1.5rem;
+      text-align: center;
+      padding: 15px;
+      border-bottom: 2px solid white;
+      position: sticky;
+      top: 0;
+      z-index: 1;
+      text-transform: none;
+    }
+
+    .post {
+      padding: 20px;
+      border-bottom: 1px dashed white;
+    }
+
+    .post-title {
+      font-size: 1.5rem;
+      margin-bottom: 5px;
+    }
+
+    .post-meta {
+      font-size: 0.9rem;
+      color: gray;
+      margin-bottom: 10px;
+    }
+
+    .contact {
+      width: 60%;
+      max-width: 400px;
+      background: black;
+      border: 2px solid white;
+      padding: 15px;
+      text-align: center;
+    }
+
+    a {
+      color: #00aaff;
+      text-decoration: underline;
+    }
+
+    a:hover { color: #5599ff; }
+    a:visited { color: #9900cc; }
+
+    .box::-webkit-scrollbar { width: 6px; }
+    .box::-webkit-scrollbar-thumb { background: #555; border-radius: 3px; }
+  </style>
+</head>
+<body>
+
+  <canvas id="stars"></canvas>
+
+  <div class="container">
+    <div class="box">
+      <div class="masthead">Spongefield.</div>
+      <!-- Blog posts will go here -->
+    </div>
+
+    <div class="contact">
+      <a href="mailto:jaismiles2006@gmail.com">jaismiles2006@gmail.com</a>
+    </div>
+  </div>
+
+  <script>
+    const canvas = document.getElementById('stars');
+    const ctx = canvas.getContext('2d');
+    let particles = [];
+
+    function resize() { 
+      canvas.width = window.innerWidth; 
+      canvas.height = window.innerHeight; 
+    }
+    window.addEventListener('resize', resize);
+    resize();
+
+    function initParticles(count) {
+      particles = [];
+      for (let i = 0; i < count; i++) {
+        particles.push({
+          x: Math.random() * canvas.width,
+          y: Math.random() * canvas.height,
+          vx: (Math.random() - 0.5) * 0.5,
+          vy: (Math.random() - 0.5) * 0.5,
+          size: 1 + Math.random() * 2
+        });
+      }
+    }
+
+    function animate() {
+      ctx.fillStyle = "black";
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      ctx.fillStyle = "white";
+
+      for (let p of particles) {
+        // Draw tiny square pixels
+        ctx.fillRect(p.x, p.y, p.size, p.size);
+
+        // Move particle
+        p.x += p.vx;
+        p.y += p.vy;
+
+        // Wrap around edges
+        if (p.x > canvas.width) p.x = 0;
+        if (p.x < 0) p.x = canvas.width;
+        if (p.y > canvas.height) p.y = 0;
+        if (p.y < 0) p.y = canvas.height;
+      }
+
+      requestAnimationFrame(animate);
+    }
+
+    initParticles(200);
+    animate();
+  </script>
+</body>
+</html>
